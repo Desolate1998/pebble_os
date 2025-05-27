@@ -1,4 +1,4 @@
-# === Configuration ===
+# === Config ===
 OS_NAME := Pebble_OS
 BUILD_DIR := build
 ISO_DIR := iso
@@ -19,58 +19,51 @@ CFLAGS := -ffreestanding -O2 -Wall -Wextra -std=gnu99
 CXXFLAGS := -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti -std=gnu++17
 LDFLAGS := -T $(LINKER_SCRIPT) -ffreestanding -O2 -nostdlib -lgcc
 
-# === File Lists ===
-C_SRC := $(wildcard $(KERNEL_DIR)/*.c)
-CPP_SRC := $(wildcard $(KERNEL_DIR)/*.cpp)
+# === Files ===
+C_SRC := $(shell find $(KERNEL_DIR) -name '*.c')
+CPP_SRC := $(shell find $(KERNEL_DIR) -name '*.cpp')
 ASM_SRC := $(wildcard $(BOOT_DIR)/*.s)
 
 OBJ := $(patsubst $(KERNEL_DIR)/%.c, $(BUILD_DIR)/%.o, $(C_SRC)) \
        $(patsubst $(KERNEL_DIR)/%.cpp, $(BUILD_DIR)/%.o, $(CPP_SRC)) \
        $(patsubst $(BOOT_DIR)/%.s, $(BUILD_DIR)/%.o, $(ASM_SRC))
 
-ISO := $(OS_NAME).iso
+ISO := $(BUILD_DIR)/$(OS_NAME).iso
 
-# === Targets ===
+# === Rules ===
 
-all: $(ISO)
+all: dirs $(ISO)
 
-$(BUILD_DIR):
+dirs:
 	mkdir -p $(BUILD_DIR)
+	mkdir -p $(ISO_DIR)/boot/grub
+	@$(foreach dir,$(sort $(dir $(OBJ))),mkdir -p $(dir);)
 
-$(ISO_DIR)/boot $(GRUB_DIR):
-	mkdir -p $(GRUB_DIR)
-
-# Compile C source
-$(BUILD_DIR)/%.o: $(KERNEL_DIR)/%.c | $(BUILD_DIR)
+$(BUILD_DIR)/%.o: $(KERNEL_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# Compile C++ source
-$(BUILD_DIR)/%.o: $(KERNEL_DIR)/%.cpp | $(BUILD_DIR)
+$(BUILD_DIR)/%.o: $(KERNEL_DIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-# Assemble ASM source
-$(BUILD_DIR)/%.o: $(BOOT_DIR)/%.s | $(BUILD_DIR)
+$(BUILD_DIR)/%.o: $(BOOT_DIR)/%.s
 	$(AS) $< -o $@
 
-# Link all objects
 $(BUILD_DIR)/$(OUTPUT_BIN): $(OBJ)
 	$(LD) $(LDFLAGS) -o $@ $^
 
-# Create GRUB config
-$(GRUB_DIR)/grub.cfg: | $(GRUB_DIR)
+$(GRUB_DIR)/grub.cfg:
 	echo 'menuentry "$(OS_NAME)" {' > $@
 	echo '    multiboot /boot/$(OUTPUT_BIN)' >> $@
-	echo '    boot' }>> $@
+	echo '    boot' >> $@
+	echo '}' >> $@
 
-# Copy binary to ISO dir
 $(ISO_DIR)/boot/$(OUTPUT_BIN): $(BUILD_DIR)/$(OUTPUT_BIN) | $(ISO_DIR)/boot
 	cp $< $@
 
-# Build ISO
 $(ISO): $(ISO_DIR)/boot/$(OUTPUT_BIN) $(GRUB_DIR)/grub.cfg
 	$(GRUB_MKRESCUE) -o $@ $(ISO_DIR)
 
 clean:
-	rm -rf $(BUILD_DIR) $(ISO_DIR) $(ISO)
+	rm -rf $(BUILD_DIR) $(ISO_DIR)
 
-.PHONY: all clean
+.PHONY: all clean dirs
