@@ -3,6 +3,11 @@
 #include "../../constants/color/color.h"
 
 namespace logger {
+	Level current_level = Level::INFO;
+
+	void set_level(Level level) {
+		current_level = level;
+	}
 
 	void init() {
 		terminal::init();
@@ -33,21 +38,23 @@ namespace logger {
 	}
 
 	void INFO(const char message[]) {
+		if (static_cast<int>(current_level) > static_cast<int>(Level::INFO)) return;
 		print_tag("INF", color::light_green);
 		print_message(message);
 		terminal::print_char('\n');
 	}
 
 	void WARN(const char message[]) {
+		if (static_cast<int>(current_level) > static_cast<int>(Level::WARN)) return;
 		print_tag("WRN", color::yellow);
 		print_message(message);
 		terminal::print_char('\n');
 	}
 
 	void ERROR(const char message[]) {
+		if (current_level == Level::NONE) return;
 		print_tag("ERR", color::red);
 		print_message(message);
 		terminal::print_char('\n');
 	}
-
 }

@@ -52,6 +52,8 @@ $(BUILD_DIR)/$(OUTPUT_BIN): $(OBJ)
 	$(LD) $(LDFLAGS) -o $@ $^
 
 $(GRUB_DIR)/grub.cfg:
+	echo 'set timeout=0" {' > $@
+	echo 'set default=0" {' > $@
 	echo 'menuentry "$(OS_NAME)" {' > $@
 	echo '    multiboot /boot/$(OUTPUT_BIN)' >> $@
 	echo '    boot' >> $@
