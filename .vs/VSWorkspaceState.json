@@ -1,0 +1,10 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\kernel\\core",
+    "\\kernel\\drivers",
+    "\\kernel\\interrupts"
+  ],
+  "SelectedNode": "\\kernel",
+  "PreviewInSolutionExplorer": false
+}
