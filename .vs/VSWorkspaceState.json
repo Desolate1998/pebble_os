@@ -1,10 +1,15 @@
 {
   "ExpandedNodes": [
     "",
+    "\\boot",
+    "\\iso",
+    "\\iso\\boot",
+    "\\iso\\boot\\grub",
     "\\kernel\\core",
     "\\kernel\\drivers",
+    "\\kernel\\drivers\\terminal",
     "\\kernel\\interrupts"
   ],
-  "SelectedNode": "\\kernel",
+  "SelectedNode": "\\run.sh",
   "PreviewInSolutionExplorer": false
 }

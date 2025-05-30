@@ -1,12 +1,25 @@
-#include <stddef.h>
-#include <stdint.h>
-#include "drivers/terminal/terminal.h"
+﻿#include "logger/logger.h"
+#include "drivers/keyboard/keyboard.h"
+#include "interrupts/pic.h"
+#include "interrupts/idt.h"
+#include "interrupts/irq.h"
 
 extern "C" void kernel_main() {
-	terminal::init();
+  pic_remap(0x20, 0x28);
+  idt_init();
+  irq_install_handlers();
+  asm volatile ("sti");
 
-	for (size_t i = 0; i < 10000; i++) {
-		terminal::write_string("Hello, kernel World!\n");
-	}
+  logger::init();
+  logger::ERROR("SYSTEM Loaded");
+  logger::WARN("SYSTEM Loaded");
+  logger::INFO("SYSTEM Loaded");
+
+  //keyboard::initialize();
+  while (true) {
+
+    //asm volatile ("hlt"); // halt CPU until next interrupt
+  }
+
 }
 

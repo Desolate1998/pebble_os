@@ -15,8 +15,8 @@ CXX := i686-elf-g++
 LD := i686-elf-g++
 GRUB_MKRESCUE := grub-mkrescue
 
-CFLAGS := -ffreestanding -O2 -Wall -Wextra -std=gnu99
-CXXFLAGS := -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti -std=gnu++17
+CFLAGS := -ffreestanding -O2 -Wall -Wextra -std=gnu99 -Ikernel
+CXXFLAGS := -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti -std=gnu++17 -Ikernel
 LDFLAGS := -T $(LINKER_SCRIPT) -ffreestanding -O2 -nostdlib -lgcc
 
 # === Files ===
@@ -55,7 +55,7 @@ $(GRUB_DIR)/grub.cfg:
 	echo 'menuentry "$(OS_NAME)" {' > $@
 	echo '    multiboot /boot/$(OUTPUT_BIN)' >> $@
 	echo '    boot' >> $@
-	echo '}' >> $@
+	echo '    }' >> $@
 
 $(ISO_DIR)/boot/$(OUTPUT_BIN): $(BUILD_DIR)/$(OUTPUT_BIN) | $(ISO_DIR)/boot
 	cp $< $@
