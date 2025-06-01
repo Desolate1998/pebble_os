@@ -3,13 +3,14 @@
     "",
     "\\boot",
     "\\iso",
-    "\\iso\\boot",
-    "\\iso\\boot\\grub",
+    "\\kernel",
+    "\\kernel\\constants",
     "\\kernel\\core",
+    "\\kernel\\core\\logger",
     "\\kernel\\drivers",
-    "\\kernel\\drivers\\terminal",
+    "\\kernel\\drivers\\keyboard",
     "\\kernel\\interrupts"
   ],
-  "SelectedNode": "\\run.sh",
+  "SelectedNode": "\\kernel\\drivers\\keyboard",
   "PreviewInSolutionExplorer": false
 }

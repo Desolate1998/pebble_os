@@ -39,7 +39,7 @@ namespace logger {
 
 	void INFO(const char message[]) {
 		if (static_cast<int>(current_level) > static_cast<int>(Level::INFO)) return;
-		print_tag("INF", color::light_green);
+		print_tag("INF", color::green);
 		print_message(message);
 		terminal::print_char('\n');
 	}
