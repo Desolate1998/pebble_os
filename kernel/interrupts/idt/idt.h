@@ -3,6 +3,6 @@
 
 namespace interrupts {
   void init_idt();
-  void init_pic();  // Add this line
+  void init_pic();
   void set_idt_entry(int index, void (*handler)());
 }
