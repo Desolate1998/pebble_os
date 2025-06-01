@@ -10,8 +10,12 @@ load_idt:
 default_interrupt_handler:
     pusha
     
-    # For now, let's make a simple handler that doesn't send EOI
-    # This prevents issues with exceptions and software interrupts
+    # Send EOI to master PIC for hardware interrupts
+    movb $0x20, %al
+    outb %al, $0x20
+    
+    # Send EOI to slave PIC as well (safe to do always)
+    outb %al, $0xA0
     
     popa
     iret

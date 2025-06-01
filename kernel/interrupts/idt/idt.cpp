@@ -41,6 +41,7 @@ void interrupts::set_idt_entry(int index, void (*handler)()) {
   idt[index].offset_high = (addr >> 16) & 0xFFFF;
 }
 
+// In your existing idt.cpp, replace the init_idt function with:
 void interrupts::init_idt() {
   // Set all entries to default handler first
   for (int i = 0; i < IDT_SIZE; i++) {
