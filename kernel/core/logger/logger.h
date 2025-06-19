@@ -1,16 +1,25 @@
 #pragma once
+#include <stddef.h>
+#include "../../lib/std/string/string.h"
 
-namespace logger {
-	enum class Level {
-		INFO,
-		WARN,
-		ERROR,
-		NONE
-	};
+namespace logger
+{
+    enum class Level
+    {
+        DEBUG,
+        INFO,
+        WARN,
+        ERROR,
+        NONE
+    };
 
-	void INFO(const char message[]);
-	void WARN(const char message[]);
-	void ERROR(const char message[]);
-	void init();
-	void set_level(Level level);
+    void set_level(Level level);
+    void init();
+
+    void info(const std::String& message, const std::String& caller = {});
+    void warn(const std::String& message, const std::String& caller = {});
+    void error(const std::String& message, const std::String& caller = {});
+    void debug(const std::String& message, const std::String& caller = {});
+
+    void hex_dump(const void* data, size_t size, const std::String& caller = {});
 }

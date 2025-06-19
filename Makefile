@@ -15,8 +15,8 @@ CXX := i686-elf-g++
 LD := i686-elf-g++
 GRUB_MKRESCUE := grub-mkrescue
 
-CFLAGS := -ffreestanding -O2 -Wall -Wextra -std=gnu99 -Ikernel
-CXXFLAGS := -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti -std=gnu++17 -Ikernel
+CFLAGS := -ffreestanding -O2 -Wall -Wextra -std=gnu99 -Ikernel -Ikernel/lib/std
+CXXFLAGS := -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti -std=gnu++17 -Ikernel -Ikernel/lib/std
 LDFLAGS := -T $(LINKER_SCRIPT) -ffreestanding -O2 -nostdlib -lgcc
 
 # === Files ===
@@ -43,17 +43,21 @@ dirs:
 	mkdir -p $(BUILD_DIR)/kernel/drivers/keyboard
 	mkdir -p $(BUILD_DIR)/kernel/drivers/terminal
 	mkdir -p $(BUILD_DIR)/kernel/interrupts/idt
+	mkdir -p $(BUILD_DIR)/kernel/lib/std
 
 # Compile C
 $(BUILD_DIR)/%.o: %.c
+	mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # Compile C++
 $(BUILD_DIR)/%.o: %.cpp
+	mkdir -p $(dir $@)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 # Assemble
 $(BUILD_DIR)/%.o: %.s
+	mkdir -p $(dir $@)
 	$(AS) $< -o $@
 
 # Link kernel binary

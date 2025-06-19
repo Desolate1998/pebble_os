@@ -35,9 +35,9 @@ extern "C" void gdt_install() {
   gdt_ptr.limit = (sizeof(GDTEntry) * 3) - 1;
   gdt_ptr.base = (uint32_t)&gdt;
 
-  gdt_set_gate(0, 0, 0, 0, 0);                // Null segment
-  gdt_set_gate(1, 0, 0xFFFFFFFF, 0x9A, 0xCF); // Code segment
-  gdt_set_gate(2, 0, 0xFFFFFFFF, 0x92, 0xCF); // Data segment
-
+  gdt_set_gate(0, 0, 0, 0, 0);                
+  gdt_set_gate(1, 0, 0xFFFFFFFF, 0x9A, 0xCF); 
+  gdt_set_gate(2, 0, 0xFFFFFFFF, 0x92, 0xCF); 
+  
   gdt_flush((uint32_t)&gdt_ptr);
 }

@@ -4,7 +4,7 @@ extern "C" void load_idt(uint32_t);
 extern "C" void default_interrupt_handler();
 extern "C" void keyboard_handler();
 
-namespace {
+namespace  {
   struct IDTEntry {
     uint16_t offset_low;
     uint16_t selector;
