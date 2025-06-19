@@ -2,14 +2,25 @@
 #include <stdint.h>
 
 namespace file {
-    struct File {
+    class File {
+    public:
+        enum class Mode { Read, Write };
+        File();
+        ~File();
+        bool open(const char* filename, Mode mode);
+        int read(void* buffer, uint32_t size);
+        int write(const void* buffer, uint32_t size);
+        bool seek(uint32_t pos);
+        void close();
+        bool is_open() const;
+        uint32_t size() const;
+        uint32_t tell() const;
+    private:
         char name[12];
-        uint32_t size;
-        uint32_t pos;
-        uint8_t* data;
+        uint32_t _size;
+        uint32_t _pos;
+        uint8_t* _data;
+        Mode _mode;
+        bool _open;
     };
-
-    bool open(const char* filename, File& file);
-    int read(File& file, uint8_t* buffer, uint32_t size);
-    void close(File& file);
 } 

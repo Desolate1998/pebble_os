@@ -12,4 +12,5 @@ namespace fat {
     bool mount();
     int list_root(DirectoryEntry* entries, int max_entries);
     int read_file(const char* filename, uint8_t* buffer, uint32_t max_size);
+    bool create_file(const char* filename, const uint8_t* data, uint32_t size);
 } 
