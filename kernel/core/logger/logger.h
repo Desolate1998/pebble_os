@@ -17,6 +17,7 @@ namespace logger
     void init();
 
     void info(const std::String& message, const std::String& caller = {});
+    void raw(const std::String& message, const std::String& caller = {});
     void warn(const std::String& message, const std::String& caller = {});
     void error(const std::String& message, const std::String& caller = {});
     void debug(const std::String& message, const std::String& caller = {});

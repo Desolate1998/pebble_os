@@ -5,13 +5,12 @@
 
 namespace input
 {
-
     enum class EventType
     {
         KeyPress,
         KeyRelease
     };
-    
+
     struct InputEvent
     {
         EventType type;
@@ -22,6 +21,7 @@ namespace input
         bool alt;
         bool caps_lock;
         bool enter;
+        bool backspace;
     };
 
     using InputEventHandler = void (*)(const InputEvent &);

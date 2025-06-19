@@ -7,6 +7,7 @@ namespace terminal {
 	
 	void init();
 	void set_color(uint8_t fg, uint8_t bg);
+	void clear();
 	void print_char(char c);
 	void print(const char message[]);
 	void print_line(const char message[]);
@@ -15,8 +16,10 @@ namespace terminal {
 	void enable_input_mode();
 	void disable_input_mode();
 	bool is_input_mode_enabled();
-
+	void remove_last_char();
 	const std::String& get_input_buffer();
 	void clear_input_buffer();
 	void process_input_events();
+	void render();
+	void move_cursor(uint8_t row, uint8_t col);
 }

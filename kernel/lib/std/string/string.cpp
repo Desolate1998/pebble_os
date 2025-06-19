@@ -4,7 +4,7 @@ namespace std
 {
     String::String()
     {
-        length = 0;
+        len = 0;
         buffer[0] = '\0';
     }
 
@@ -15,23 +15,47 @@ namespace std
 
     void String::copy(const char* str)
     {
-        length = 0;
-        while (str[length] && length < 255)
+        len = 0;
+        while (str[len] && len < 255)
         {
-            buffer[length] = str[length];
-            length++;
+            buffer[len] = str[len];
+            len++;
         }
-        buffer[length] = '\0';
+        buffer[len] = '\0';
     }
 
     void String::append(const char* str)
     {
         int i = 0;
-        while (str[i] && length < 255)
+        while (str[i] && len < 255)
         {
-            buffer[length++] = str[i++];
+            buffer[len++] = str[i++];
         }
-        buffer[length] = '\0';
+        buffer[len] = '\0';
+    }
+
+    void String::append_char(char c)
+    {
+        if (len < 255)
+        {
+            buffer[len++] = c;
+            buffer[len] = '\0';
+        }
+    }
+
+    void String::pop()
+    {
+        if (len > 0)
+        {
+            len--;
+            buffer[len] = '\0';
+        }
+    }
+
+    void String::clear()
+    {
+        len = 0;
+        buffer[0] = '\0';
     }
 
     bool String::equals(const char* str) const
@@ -44,22 +68,21 @@ namespace std
         return strcmp(buffer, other.buffer);
     }
 
-    void String::clear()
-    {
-        length = 0;
-        buffer[0] = '\0';
-    }
-
     const char* String::c_str() const
     {
         return buffer;
     }
 
+    int String::length() const
+    {
+        return len;
+    }
+
     int String::strlen(const char* str)
     {
-        int len = 0;
-        while (str[len]) ++len;
-        return len;
+        int l = 0;
+        while (str[l]) ++l;
+        return l;
     }
 
     bool String::strcmp(const char* a, const char* b)
@@ -67,7 +90,8 @@ namespace std
         while (*a && *b)
         {
             if (*a != *b) return false;
-            ++a; ++b;
+            ++a;
+            ++b;
         }
         return *a == '\0' && *b == '\0';
     }

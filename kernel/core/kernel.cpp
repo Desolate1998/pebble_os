@@ -2,10 +2,12 @@
 #include "../drivers/keyboard/keyboard.h"
 #include "../interrupts/idt/idt.h"
 #include "../lib/std/std.h"
+#include "../drivers/terminal/terminal.h"
+namespace main
+{
 
-namespace main {
-
-  void kernel_initialization() {
+  void kernel_initialization()
+  {
     logger::init();
     logger::set_level(logger::Level::INFO);
 
@@ -22,25 +24,25 @@ namespace main {
     logger::info("Initializing keyboard driver...", "KERNEL");
     keyboard::init();
     logger::info("Keyboard driver initialized", "KERNEL");
-    
-    asm volatile("sti");
 
+    asm volatile("sti");
   }
 
-  extern "C" void kernel_main() {
+  extern "C" void kernel_main()
+  {
     kernel_initialization();
-while (true)
-{
-  /* code */
-  
-  logger::info("Please enter username");
-  std::String username = std::get_input();
-  logger::info("your username is");
-  logger::info(username);
-}
 
+    while (true)
+    {
+      std::String command = std::get_input();
+      if (command.equals("clear"))
+      {
+        terminal::clear();
+      }
+    }
 
-    while (true) {
+    while (true)
+    {
       asm volatile("hlt");
     }
   }

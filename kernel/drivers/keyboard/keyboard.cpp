@@ -67,7 +67,6 @@ extern "C" void keyboard_interrupt_received(uint8_t scancode)
             }
             else if (shift_pressed)
             {
-                // Handle shifted number and symbol keys
                 static const char shifted_chars[128] = {
                     0, 27, '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '\b',
                     '\t', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '{', '}', '\n', 0,
@@ -87,6 +86,7 @@ extern "C" void keyboard_interrupt_received(uint8_t scancode)
     event.alt = alt_pressed;
     event.caps_lock = caps_lock_on;
     event.enter = (pure_scancode == 0x1C);
+    event.backspace = (pure_scancode == 0x0E);
 
     input::dispatch_event(event);
 }
