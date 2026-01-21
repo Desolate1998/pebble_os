@@ -1,0 +1,19 @@
+[package]
+name = "command_driver"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "command_driver"
+crate-type = ["staticlib", "rlib"]
+
+[profile.release]
+opt-level = 3
+panic = "abort"
+
+[profile.dev]
+panic = "abort"
+
+
+[dependencies]
+

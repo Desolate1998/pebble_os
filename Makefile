@@ -15,9 +15,18 @@ CXX := i686-elf-g++
 LD := i686-elf-g++
 GRUB_MKRESCUE := grub-mkrescue
 
+# Rust configuration
+RUST_MANIFEST := rust/Cargo.toml
+RUST_TARGET_JSON := rust/i686-pebble.json
+RUST_TARGET_DIR := rust/target/i686-pebble
+RUST_LIB := $(RUST_TARGET_DIR)/release/libcommand_driver.a
+
 CFLAGS := -ffreestanding -O2 -Wall -Wextra -std=gnu99 -Ikernel -Ikernel/lib/std
 CXXFLAGS := -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti -std=gnu++17 -Ikernel -Ikernel/lib/std
-LDFLAGS := -T $(LINKER_SCRIPT) -ffreestanding -O2 -nostdlib -lgcc
+LDFLAGS := -T $(LINKER_SCRIPT) -ffreestanding -O2 -nostdlib
+
+# Hardcoded libgcc path
+LIBGCC := /usr/local/cross/lib/libgcc.a
 
 # === Files ===
 C_SRC := $(shell find $(KERNEL_DIR) -name '*.c')
@@ -27,6 +36,9 @@ ASM_SRC := $(shell find $(KERNEL_DIR) $(BOOT_DIR) -name '*.s')
 OBJ := $(patsubst %.c, $(BUILD_DIR)/%.o, $(C_SRC)) \
        $(patsubst %.cpp, $(BUILD_DIR)/%.o, $(CPP_SRC)) \
        $(patsubst %.s, $(BUILD_DIR)/%.o, $(ASM_SRC))
+
+# Include Rust staticlib in objects so link rule picks it up as dependency
+OBJ += $(RUST_LIB)
 
 ISO := $(BUILD_DIR)/$(OS_NAME).iso
 
@@ -62,7 +74,7 @@ $(BUILD_DIR)/%.o: %.s
 
 # Link kernel binary
 $(BUILD_DIR)/$(OUTPUT_BIN): $(OBJ)
-	$(LD) $(LDFLAGS) -o $@ $^
+	$(LD) $(LDFLAGS) -o $@ $^ $(LIBGCC)
 
 # GRUB config
 $(GRUB_DIR)/grub.cfg:
@@ -80,6 +92,11 @@ $(ISO_DIR)/boot/$(OUTPUT_BIN): $(BUILD_DIR)/$(OUTPUT_BIN) | $(ISO_DIR)/boot
 # Build ISO
 $(ISO): $(ISO_DIR)/boot/$(OUTPUT_BIN) $(GRUB_DIR)/grub.cfg
 	$(GRUB_MKRESCUE) -o $@ $(ISO_DIR)
+
+# Build Rust crate for freestanding target
+$(RUST_LIB): $(RUST_MANIFEST) $(RUST_TARGET_JSON)
+	@echo "Building Rust command driver (nightly, build-std)..."
+	cd rust && cargo +nightly build -Z build-std=core,compiler_builtins --manifest-path Cargo.toml --target i686-pebble.json --release
 
 clean:
 	rm -rf $(BUILD_DIR) $(ISO_DIR)
